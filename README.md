@@ -58,7 +58,7 @@ Required files for that to run:
 
 Save the final restart file in the “restart” folder and reference it in the .yaml, making sure that the line isn't commented out (`wrf_hydro_channel_restart_file : restart/troute_restart.nc`) 
 
-After that line add the following four lines: 
+After that line, add the following: 
 
 ```
 wrf_hydro_channel_ID_crosswalk_file_field_name : link 
@@ -69,6 +69,8 @@ wrf_hydro_channel_restart_downstream_flow_field_name : qlink2
 
 wrf_hydro_channel_restart_depth_flow_field_name : hlink
 ```
+
+Also of note, in nhd_io.py, the function 'get_channel_restart_from_wrf_hydro' got rewritten to remove the dependency of the restart file containing channel IDs in the same order of the crosswalk_file.
 
 ## Running T-Route
 
