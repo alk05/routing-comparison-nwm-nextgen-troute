@@ -20,10 +20,9 @@ Open file folder, and get RouteLink_CONUS.nc and move it to the “domain” fol
 Within the .yaml file replace each instance of RouteLink.nc with the new route link file. 
 
 ## Forcing Files 
-Go to the [NWM Google Bucket](https://console.cloud.google.com/storage/browser/national-water-model;tab=objects?hl=en&prefix=&forceOnObjectsSortingFiltering=false), select day of interest, short_range, and then download the 18 channel_rt files that correspond to your chosen hour. The numbers following the "t" indicate the chosen hour. (Files/short_range contains files for June 19th, 2026 hour 04). 
+In the [NWM Google Bucket](https://console.cloud.google.com/storage/browser/national-water-model;tab=objects?hl=en&prefix=&forceOnObjectsSortingFiltering=false), select day of interest, short_range, and then download the 18 channel_rt files that correspond to your chosen hour. The numbers following the "t" indicate the hour. (Files/short_range contains files for June 19th, 2026 hour 04). 
 
-In order for T-Route to successful run, these files need to be renamed in the format "YYYMMDDHHMM.CHRTOUT_DOMAIN1". 
-For example:
+In order for T-Route to successful run, these files need to be renamed in the format "YYYYMMDDHHMM.CHRTOUT_DOMAIN1". For example:
 New File Name | Original File Name
 ---|---
 202604300000.CHRTOUT_DOMAIN | nwm.t00z.short_range.channel_rt.f001.conus.nc 
