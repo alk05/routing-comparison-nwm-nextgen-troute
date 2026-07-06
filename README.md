@@ -14,7 +14,7 @@ Make a copy of the test_Ana_V4_NHD.yaml file, which is the file that’ll get ed
 
 To create the mask file, run [notebook](https://github.com/jameshalgren/troute-network-analysis/blob/main/notebooks/Subnetwork_Extraction_andMask_Demo.ipynb) for each location you’re interested in, to get a list of upstream reach IDs starting from any arbitrary segment. Combine the outputs from each location into a single text file and move it to the “domain” folder. 
 
-In the case of the Mulberry Creek, Walnut Creek, and Cahaba River locations, there is approximately 2,000 reach IDs. 
+In the case of the Mulberry Creek, Walnut Creek, and Cahaba River locations, there is approximately 2,000 reach IDs. (File can be found in the repository)
 
 Reference it under ‘mask_file_path’ in the yaml file (`mask_file_path: domain/specific_AL_sites.txt`) 
 
@@ -80,7 +80,7 @@ In the terminal, in your virtual environment, to the folder that you made at the
 
 Ex: `python3 -m nwm_routing -f -V4 alabamatest.yaml` 
 
-T-route outputs data for every five minutes of the 18 hours runtime, starting 5 minutes after the start_datetime. 
+T-route outputs data for every five minutes of the 18 hours runtime, starting 5 minutes after the start_datetime. (Example output found in repository, "flowveldepth_2026-07-01T13:05:35.034852.parquet")
 
 # USGS Gage Outputs 
 (to see how wildly different NWM is from the actual gage data). 
@@ -89,7 +89,7 @@ Find the monitoring location page for the [gage(s)](https://waterdata.usgs.gov/e
 
 Make sure you’re looking at discharge (not height) and for the time period that you’re interested in.  
 
-Download "continuous data".  
+Download "continuous data".  (Example files found in the repository)
 
 # NextGen Routing-Only Outputs 
 
