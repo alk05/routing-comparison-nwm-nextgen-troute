@@ -1,11 +1,11 @@
 # README 
-This repository is a documentation of _______
+This repository is a documentation of _______ ... getting t-route outputs to match the National Water Model, while also comparing it to next-gen routing-only datastream and USGS gage outputs, in the hopes of eventually improving the routing-only outputs to be better than the NWM.
 
 # T-route Outputs 
-Running t-route on NWM framework, etc. etc.
+Running t-route on NWM framework, etc., to get outputs that match (or at least are very similar to) NWM outputs.
 
-## Installation  
-Follow [install instructions](https://github.com/CIROH-UA/t-route), make a copy of the Lower Colorado example folder, and make a copy of the test_Ana_V4_NHD.yaml file, which is the one that will be edited.
+## Installation 
+Follow [install instructions](https://github.com/CIROH-UA/t-route), and within a copy of the Lower Colorado example folder, make a copy of the test_Ana_V4_NHD.yaml file to edit.
 
 ## Mask File 
 To create the mask file, run the following [notebook](https://github.com/jameshalgren/troute-network-analysis/blob/main/notebooks/Subnetwork_Extraction_andMask_Demo.ipynb) for each location of interest, to get a list of upstream reach IDs. Combine the outputs from each location into a single text file and move it to the “domain” folder. In the case of the mask file found in this repository, there are collectively around 2,000 reachs IDs corresponding to the Mulberry Creek, Walnut Creek, and Cahaba River locations.
