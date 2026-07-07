@@ -30,6 +30,8 @@ New File Name | Original File Name
 202606190400.CHRTOUT_DOMAIN | nwm.t04z.short_range.channel_rt.f001.conus.nc 
 202606190500.CHRTOUT_DOMAIN | nwm.t04z.short_range.channel_rt.f002.conus.nc
 
+Technically, the f001 files correspond to an hour after the initial time, (1 am not, mightnight, or 5 am not 4am, like in the examples). However NWM and t-route have different 'definitions' of what an hour is, for one it means the outputs at the end of the hour, and the other outputs for the coming hour. This slightly ~wrong~ naming convention ensures that the two models align.
+
 Move these files to the “channel_forcing” folder. 
 
 ## Restart files 
@@ -65,9 +67,7 @@ Change the `start_datetime` to the desired time.
 
 Change `nts` to “216”, to correspond with an 18 hour runtime. 
 
-In the terminal, within the virtual environment, to the folder that you made at the beginning (`~git/t-route/test/Alabamatest`), call the program.  
-
-Ex: `python3 -m nwm_routing -f -V4 alabamatest.yaml` 
+In the terminal, within the virtual environment, to the folder that you made at the beginning (`~git/t-route/test/Alabamatest`), call the program, `python3 -m nwm_routing -f -V4 <filename>.yaml`.
 
 T-route outputs data for every five minutes of the 18 hours runtime, starting 5 minutes after the start_datetime. (Example output found in repository with file name "flowveldepth_2026-07-01T13:05:35.034852.parquet")
 
