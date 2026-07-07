@@ -2,9 +2,7 @@
 This repository is a documentation of __________. (getting t-route outputs to match the National Water Model, while also comparing it to next-gen routing-only datastream and USGS gage outputs, in the hopes of eventually improving the routing-only outputs to be better than the NWM).
 
 # T-route Outputs 
-Running t-route on NWM framework, etc.
-
-## Installation 
+## Install
 Follow [install instructions](https://github.com/CIROH-UA/t-route), and within a copy of the Lower Colorado example folder, make a copy of the test_Ana_V4_NHD.yaml file to edit.
 
 ## Mask File 
