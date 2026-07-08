@@ -1,5 +1,5 @@
 # README 
-This repository is a documentation of __________. (getting t-route outputs to match the National Water Model, while also comparing it to next-gen routing-only datastream and USGS gage outputs, in the hopes of eventually improving the routing-only outputs to be better than the NWM).
+This is a documentation of getting t-route outputs to match the National Water Model, while also comparing it to next-gen routing-only datastream and USGS gage outputs (in the hopes of eventually improving the routing-only outputs to be better than the NWM).
 
 # T-route Outputs 
 Running t-route on NWM framework, etc.
@@ -35,12 +35,7 @@ Move these files to the “channel_forcing” folder.
 ## Restart files 
 Return to the [Google Bucket](https://console.cloud.google.com/storage/browser/national-water-model;tab=objects?hl=en&prefix=&forceOnObjectsSortingFiltering=false), this time choosing analysis_assim. For the channel_rt files for the chosen hour, there are three files to choose from: tm00, tm01, and tm02. Download the tm00. 
 
-This file doesn’t have the variables required for t-route (qlink, hlink, etc.). Use `restart.ipynb` to get a working restart file. (Based off the following [code](https://github.com/CIROH-UA/forcingprocessor/blob/main/src/forcingprocessor/troute_restart_tools.py)).
-
-Required files for the code: 
-* The analysis_assim file
-* RouteLink file (previously downloaded) 
-* nwm_to_nextgen_map.json file (NextGen AWS under [mappings](https://datastream.ciroh.org/index.html#mappings/)) 
+This file doesn’t have the variables required for t-route (qlink, hlink, etc.). Use `restart.ipynb`, based off the following [code](https://github.com/CIROH-UA/forcingprocessor/blob/main/src/forcingprocessor/troute_restart_tools.py) to get a working restart file. Additional files required to run the code include the RouteLink file, and the nwm_to_nextgen_map.json file (NextGen AWS under [mappings](https://datastream.ciroh.org/index.html#mappings/)). 
 
 Save the final restart file in the “restart” folder and reference it in the .yaml, making sure that the line isn't commented out (`wrf_hydro_channel_restart_file : restart/troute_restart.nc`) 
 
@@ -61,9 +56,9 @@ Also of note, in nhd_io.py, the function `get_channel_restart_from_wrf_hydro` or
 ## Running T-Route
 Change the `start_datetime` to the desired time. 
 
-Change `nts` to “216”, to correspond with an 18 hour runtime. 
+Set `nts : 216`, to correspond with an 18 hour runtime. 
 
-In the terminal, within the virtual environment, to the folder that you made at the beginning (`~git/t-route/test/Alabamatest`), call the program, `python3 -m nwm_routing -f -V4 <filename>.yaml`.
+Call the program, `python3 -m nwm_routing -f -V4 <filename>.yaml`.
 
 T-route outputs data for every five minutes of the 18 hours runtime, starting 5 minutes after the start_datetime. (Example output found in repository with file name "flowveldepth_2026-07-01T13:05:35.034852.parquet")
 
@@ -78,7 +73,7 @@ Alternatively, download via the [CIROH AWS](https://datastream.ciroh.org/index.h
 # Visualizing the Outputs 
 The `visualizing_outputs.ipynb` notebook compiles all the outputs from the different sources (NWM, t-route, next-gen routing-only, and gage data) and plots them for a given NextGen ID, as well as producing a table of values. The notebook requires the user to know the NextGen ID for the locations of interest, which can be looked up [here](https://nrds.ciroh.org/).
 
-To run the notebook, update the filepathways for all the files that were downloaded. The NWM output files are the same files that are used as the channel forcing files, but the way the code is written reflects the files before the file names were changed to the *CHRTOUT_DOMAIN1 version.
+To run the notebook, update the filepathways for all the files that were downloaded. The NWM output files are the same files that are used as the channel forcing files, but the way the code is written uses the file names before they were changed to the *CHRTOUT_DOMAIN1 version.
 
 For the gage data, two more changes are needed. Adjust the start and end dates at the bottom of the `get_comparison_data` function, and in the function `show_combined_info`, edit the NextGen IDs associated with each gage.
 
