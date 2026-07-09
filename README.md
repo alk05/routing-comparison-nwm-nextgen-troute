@@ -1,5 +1,5 @@
 # Streamflow Routing Comparison: NWM, NextGen Routing-Only Datastream, and Locally-Executed T-Route
-This is a documentation of getting t-route outputs to match the National Water Model, while also comparing it to next-gen routing-only datastream and USGS gage outputs (in the hopes of eventually improving the routing-only outputs to be better than the NWM).
+This repository documents the process to align standalone t-route simulations with the National Water Model. A comparison is made between the outputs from the NWM, NextGen Routing-Only Datastream, and a standalone local execution of T-Route forced with NWM. All outputs are validated against observed USGS gage data, with the ultimate goal of making adjustments that allow the NextGen Routing-Only Datastream to outperform the NWM. 
 
 ## Table of Contents
 - [Installation](#install)
@@ -13,9 +13,8 @@ This is a documentation of getting t-route outputs to match the National Water M
 - [NextGen Routing-Only Datastream Outputs](#nextgen-routing-only-datastream-outputs)
 - [Visualizing the Outputs](#visualizing-the-outputs)
 
-
 # T-Route Outputs 
-Running t-route on NWM framework, etc.
+This section walks through the steps of executing a standalone T-Route simulation, using the NWM framework. 
 
 ## Install
 Follow [install instructions](https://github.com/CIROH-UA/t-route), and within a copy of the Lower Colorado example folder, make a copy of the test_Ana_V4_NHD.yaml file to edit.
@@ -79,7 +78,7 @@ T-route outputs data for every five minutes of the 18 hours runtime, starting 5 
 To be able to evaluate models against real values, find the monitoring location page for the [gage(s)](https://waterdata.usgs.gov/explore/#dataCollections=continuous&mapCenter=33.25700003497726,-86.64346089407479&mapZoomLevel=7) of interest. Change time span, and data type to discharge, before downloading "continuous data" (Example files found in the repository). 
 
 # NextGen Routing-Only Datastream Outputs 
-Download the output files using one of the following methods
+Download the output files using one of the following methods:
 * Via the [datastream viewer](https://communityhydrofabric.s3.us-east-1.amazonaws.com/datastream_viewer.html?bucket=ciroh-community-ngen-datastream&path=outputs%2Frouting_only%2Fv2.2_hydrofabric%2F)
   * Example path: `ciroh-community-ngen-datastream/outputs/routing_only/v2.2_hydrofabric/ngen.20260430/short_range/00/VPU_03W`
 * Via the [CIROH AWS](https://datastream.ciroh.org/index.html#outputs/routing_only/v2.2_hydrofabric/)
