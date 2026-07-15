@@ -20,12 +20,12 @@ This section walks through the steps of executing a standalone T-Route simulatio
 Follow [install instructions](https://github.com/CIROH-UA/t-route), and within a copy of the Lower Colorado example folder, make a copy of the test_Ana_V4_NHD.yaml file to edit.
 
 ## Mask File 
-To create the mask file, run the following [notebook](https://github.com/jameshalgren/troute-network-analysis/blob/main/notebooks/Subnetwork_Extraction_andMask_Demo.ipynb) for each location of interest, to get a list of upstream reach IDs. Combine the outputs from each location into a single text file and move it to the “domain” folder. In the case of the mask file found in this repository, there are collectively around 2,000 reachs IDs corresponding to the Mulberry Creek, Walnut Creek, and Cahaba River locations.
+To create the mask file, run the following [notebook](https://github.com/jameshalgren/troute-network-analysis/blob/main/notebooks/Subnetwork_Extraction_andMask_Demo.ipynb) for each location of interest, to get a list of upstream reach IDs. Combine the outputs from each location into a single text file and move it to the “domain” folder. In the case of the mask file found in this repository, there are around 2,000 reachs IDs collectively corresponding to the Mulberry Creek, Walnut Creek, and Cahaba River locations.
 
 Reference the file under `mask_file_path` in the .yaml file (Example: `mask_file_path: domain/specific_AL_sites.txt`).
 
 ## RouteLink File 
-Download [NWM parameter files](https://water.noaa.gov/about/nwm), found in the webpage section "Parameter Files". Open file folder, and get RouteLink_CONUS.nc and move it to the “domain” folder. 
+Download [NWM parameter files](https://water.noaa.gov/about/nwm), found in the webpage section "Parameter Files". Open file folder, and move RouteLink_CONUS.nc to the “domain” folder. 
 
 Within the .yaml file, replace each instance of RouteLink.nc with the new route link file. 
 
@@ -45,7 +45,7 @@ Technically, the f001 files correspond to an hour after the initial time, (for t
 Move these files to the “channel_forcing” folder. 
 
 ## Restart files 
-Return to the [Google Bucket](https://console.cloud.google.com/storage/browser/national-water-model;tab=objects?hl=en&prefix=&forceOnObjectsSortingFiltering=false), this time choosing analysis_assim. For the channel_rt files for the chosen hour, there are three files to choose from: tm00, tm01, and tm02. Download the tm00. 
+Return to the [Google Bucket](https://console.cloud.google.com/storage/browser/national-water-model;tab=objects?hl=en&prefix=&forceOnObjectsSortingFiltering=false), this time choosing analysis_assim. Download the channel_rt.tm00 for the chosen hour. 
 
 This file doesn’t have the variables required for t-route (qlink, hlink, etc.). Use `restart.ipynb`, based on the following [code](https://github.com/CIROH-UA/forcingprocessor/blob/main/src/forcingprocessor/troute_restart_tools.py) to get a working restart file. Additional files required to run the code include the RouteLink file, and the nwm_to_nextgen_map.json file (NextGen AWS under [mappings](https://datastream.ciroh.org/index.html#mappings/)). 
 
@@ -63,7 +63,7 @@ wrf_hydro_channel_restart_downstream_flow_field_name : qlink2
 wrf_hydro_channel_restart_depth_flow_field_name : hlink
 ```
 
-Also of note, in nhd_io.py, the function `get_channel_restart_from_wrf_hydro` originally required the restart file to have channel IDs in the same order as in the crosswalk_file, but was rewritten to remove that requirement.
+Additionally, in nhd_io.py, the function `get_channel_restart_from_wrf_hydro` originally required the restart file to have channel IDs in the same order as in the crosswalk_file, but was rewritten to remove that requirement.
 
 ## Running T-Route
 Change the `start_datetime` to the desired time. 
@@ -85,7 +85,7 @@ Download the output files using one of the following methods:
   * Example path: `ciroh-community-ngen-datastream/outputs/routing_only/v2.2_hydrofabric/ngen.20260430/short_range/00/VPU_03W/ngen-run/outputs/troute`
 
 # Visualizing the Outputs 
-The `visualizing_outputs.ipynb` notebook compiles all the outputs from the different sources (NWM, t-route, next-gen routing-only, and gage data) and plots them for a given NextGen ID, as well as producing a table of values. The notebook requires the user to know the NextGen ID for the locations of interest, which can be looked up [here](https://nrds.ciroh.org/).
+The `visualizing_outputs.ipynb` notebook compiles all the outputs from the different sources (NWM, t-route, next-gen routing-only, and gage data) and plots them for a given NextGen ID, as well as producing a table of values. The notebook requires the user to know the NextGen ID for the location of interest, which can be looked up [here](https://nrds.ciroh.org/).
 
 To run the notebook, update the file paths for all the files that were downloaded. The NWM output files are the same files that are used as the channel forcing files, but the way the code is written uses the file names before they were changed to the *CHRTOUT_DOMAIN1 version.
 
