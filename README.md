@@ -1,5 +1,5 @@
 # Streamflow Routing Comparison: NWM, NextGen Routing-Only Datastream, and Locally-Executed T-Route
-This repository documents the process to align standalone t-route simulations with the National Water Model. A comparison is made between the outputs from the NWM, NextGen Routing-Only Datastream, and a standalone local execution of T-Route forced with NWM. All outputs are validated against observed USGS gage data, with the goal is to exactly (or nearly exactly) match the NWM output. 
+This repository documents the process to align standalone t-route simulations with the National Water Model. A comparison is made between the outputs from the NWM, NextGen Routing-Only Datastream, and a standalone local execution of T-Route forced with NWM. All outputs are validated against observed USGS gage data, with the goal to exactly (or nearly exactly) match the NWM output. 
 
 ## Table of Contents
 - [Installation](#install)
