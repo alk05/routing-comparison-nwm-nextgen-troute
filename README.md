@@ -63,7 +63,7 @@ wrf_hydro_channel_restart_downstream_flow_field_name : qlink2
 wrf_hydro_channel_restart_depth_flow_field_name : hlink
 ```
 
-Additionally, in nhd_io.py, the function `get_channel_restart_from_wrf_hydro` originally required the restart file to have channel IDs in the same order as in the crosswalk_file, but was rewritten to remove that requirement. The code is found in the repository under 'get_channel)restart_from_wrf_hydro'.
+Additionally, in nhd_io.py, the function `get_channel_restart_from_wrf_hydro` originally required the restart file to have channel IDs in the same order as in the crosswalk_file, but was rewritten to remove that requirement. The rewritten code is found in the repository under 'get_channel_restart_from_wrf_hydro', to replace the current function.
 
 ## Running T-Route
 Change the `start_datetime` to the desired time. 
