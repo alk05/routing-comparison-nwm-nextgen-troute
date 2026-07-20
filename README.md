@@ -1,5 +1,5 @@
 # Streamflow Routing Comparison: NWM, NextGen Routing-Only Datastream, and Locally-Executed T-Route
-This repository documents the process to align standalone t-route simulations with the National Water Model. A comparison is made between the outputs from the NWM, NextGen Routing-Only Datastream, and a standalone local execution of T-Route forced with NWM. All outputs are validated against observed USGS gage data, with the ultimate goal of making adjustments that allow the NextGen Routing-Only Datastream to outperform the NWM. 
+This repository documents the process to align standalone t-route simulations with the National Water Model. A comparison is made between the outputs from the NWM, NextGen Routing-Only Datastream, and a standalone local execution of T-Route forced with NWM. All outputs are validated against observed USGS gage data, with the goal is to exactly (or nearly exactly) match the NWM output. 
 
 ## Table of Contents
 - [Installation](#install)
@@ -63,7 +63,7 @@ wrf_hydro_channel_restart_downstream_flow_field_name : qlink2
 wrf_hydro_channel_restart_depth_flow_field_name : hlink
 ```
 
-Additionally, in nhd_io.py, the function `get_channel_restart_from_wrf_hydro` originally required the restart file to have channel IDs in the same order as in the crosswalk_file, but was rewritten to remove that requirement.
+Additionally, in nhd_io.py, the function `get_channel_restart_from_wrf_hydro` originally required the restart file to have channel IDs in the same order as in the crosswalk_file, but was rewritten to remove that requirement. The code is found in the repository under 'get_channel)restart_from_wrf_hydro'.
 
 ## Running T-Route
 Change the `start_datetime` to the desired time. 
@@ -91,4 +91,4 @@ To run the notebook, update the file paths for all the files that were downloade
 
 For the gage data, two more changes are needed. Adjust the start and end dates at the bottom of the `get_comparison_data` function, and in the function `show_combined_info`, edit the NextGen IDs associated with each gage.
 
-NextGen IDs correspond to multiple NWM streamreaches. Many of these NWM IDs are tributaries to the main branch of the creek or river, and they are unaffected by the precipitation that happened upstream from the main branch. As a result, they show essentially no response during a rainfall event; their flowrate is basically zero. The code has a `zero_tolerance` that can be set to filter out these negligible IDs. The code also plots an average of the remaining NWM IDs. 
+NextGen IDs correspond to multiple NWM streamreaches. Many of these NWM IDs are tributaries to the main branch of the creek or river, and they are unaffected by the precipitation that happened upstream from the main branch. As a result, they show essentially no response during a rainfall event; their flowrate is basically zero. The code has a `zero_tolerance` that can be set to filter out these IDs. The code also plots an average of the remaining NWM IDs. 
