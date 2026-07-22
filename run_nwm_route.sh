@@ -46,8 +46,10 @@
 # Some function to fetch and reformat NWM analysis_assim data into restarts
 # python fetch_nwm_data.py --start_date YYYYmmddHHMM --runinput 5
 # wget -i filenamelist.txt
-# process the raw file into an appropriate format using code from restart.ipynb
-# TODO: rewrite restart.ipynb into a restart.py
+# python restart.py --nwm_file_path /path/to/analysis/assim/file
+#    --routelink_file_path /path/to/RouteLink_CONUS.nc
+#    --map_file_path /path/to/nwm_to_ngen_map.json
+#   --output_directory /path/to/restart/dir
 
 # Some function to edit troute.yaml and run t-route
 # Do some regex magic to change start_datetime and nts, and mask file
