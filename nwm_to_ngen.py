@@ -41,9 +41,11 @@ def main():
     with open(args.nwm_to_ngen_map, "r", encoding="utf-8") as f:
         mapping_dict = json.load(f) # {nex-id: [nwm_id_1, nwm_id_2, ...]}
 
+    troute_filepath = args.troute_outputs
+
     # t_route
     df_t_route = pd.read_parquet(
-        args.troute_outputs
+        troute_filepath
     )
 
     # Create reverse mapping
@@ -52,12 +54,12 @@ def main():
     # Map and aggregate
     df_t_route['feature_id'] = df_t_route['feature_id'].map(id_to_cat)
     ngen_output = df_t_route.groupby(['feature_id', 'time'], as_index=False).agg({
-        'flow': 'mean',
+        'flow': 'max', # TODO: figure out how to get the most downstream value
         'velocity': 'mean',
-        'depth': 'mean',
-        'nudge': 'mean',  # or 'first' if you prefer
+        'depth': 'max',
+        'nudge': 'mean',
         'type': 'first'   # assumes type is constant within groups
     })
 
-    ngen_output.to_parquet()
-    # TODO: write the parquet file out somewhere, figure out the name
+    ngen_output_path = troute_filepath.with_stem(f"converted_{troute_filepath.stem}")
+    ngen_output.to_parquet(ngen_output_path)

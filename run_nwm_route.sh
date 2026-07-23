@@ -57,5 +57,5 @@
 # python3 -m nwm_routing -f -V4 troute.yaml
 
 # Some function to convert NWM t-route outputs into NextGen catchment resolution
-# use code from visualizing_outputs.ipynb
-# TODO: rewrite visualizing_outputs.ipynb into a visualizing_outputs.ipynb
+# python nwm_to_ngen.py --nwm_to_ngen_map /path/to/map/json
+# --troute_outputs /path/to/nwm/troute/outputs
