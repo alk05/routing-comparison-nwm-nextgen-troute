@@ -330,5 +330,8 @@ def main():
         name=output_filename
     )
 
+    # prints so bash can read the filename
+    print(output_filename)
+
 if __name__ == "__main__":
     main()

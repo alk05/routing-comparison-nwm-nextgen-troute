@@ -31,31 +31,103 @@
 #   docker run -e START_DATE=2024-09-25 -e END_DATE=2024-09-28 ...
 # =============================================================================
 
-# Arguments we need to take:
-# start time YYYYmmddHHMM
-# forecast type
-# VPU
-# TODO: write an argument parser
+# Argument parser
+# Default values
+START_TIME=""
+FORECAST_TYPE=""
+VPU=""
 
-# Some function to fetch and reformat NWM forecast data
-# python fetch_nwm_data.py --start_date YYYYmmddHHMM --runinput 1
-# wget -P /path/to/channel_forcing -i filenamelist.txt
-# some scripting to rename the files
-# TODO: write the rename file scripting
+# Valid options
+VALID_FORECAST_TYPES="1 2 3 4 11"
+VALID_VPUS="01 02 03N 03S 03W 04 05 06 07 08 09 10L 10U 11 12 13 14 15 16 17 18"
 
-# Some function to fetch and reformat NWM analysis_assim data into restarts
-# python fetch_nwm_data.py --start_date YYYYmmddHHMM --runinput 5
-# wget -i filenamelist.txt
-# python restart.py --nwm_file_path /path/to/analysis/assim/file
-#    --routelink_file_path /path/to/RouteLink_CONUS.nc
-#    --map_file_path /path/to/nwm_to_ngen_map.json
-#   --output_directory /path/to/restart/dir
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --START_TIME)
+            START_TIME="$2"
+            shift 2
+            ;;
+        --FORECAST_TYPE)
+            FORECAST_TYPE="$2"
+            shift 2
+            ;;
+        --VPU)
+            VPU="$2"
+            shift 2
+            ;;
+        --help)
+            echo "Usage: $0 --START_TIME <YYYYMMDDHHmm> --FORECAST_TYPE <1|2|3|4|11> --VPU <VPU_code>"
+            echo ""
+            echo "Arguments:"
+            echo "  --START_TIME      Start time in YYYYMMDDHHmm format (required)"
+            echo "  --FORECAST_TYPE   Forecast type: 1, 2, 3, 4, or 11 (required)"
+            echo "  --VPU             VPU code: 01, 02, 03N, 03S, 03W, etc. (required)"
+            echo ""
+            echo "Example: $0 --START_TIME 202607031100 --FORECAST_TYPE 1 --VPU 03W"
+            exit 0
+            ;;
+        *)
+            echo "Error: Unknown option '$1'"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
+
+# Validate required arguments
+if [[ -z "$START_TIME" || -z "$FORECAST_TYPE" || -z "$VPU" ]]; then
+    echo "Error: Missing required arguments"
+    echo "Use --help for usage information"
+    exit 1
+fi
+
+# Validate START_TIME format (YYYYMMDDHHmm = 12 digits)
+if ! [[ "$START_TIME" =~ ^[0-9]{12}$ ]]; then
+    echo "Error: START_TIME must be in YYYYMMDDHHmm format (12 digits)"
+    exit 1
+fi
+
+# Validate FORECAST_TYPE
+if ! [[ "$VALID_FORECAST_TYPES" =~ $FORECAST_TYPE ]]; then
+    echo "Error: FORECAST_TYPE must be one of: $VALID_FORECAST_TYPES"
+    exit 1
+fi
+
+# Validate VPU
+if ! [[ "$VALID_VPUS" =~ $VPU ]]; then
+    echo "Error: VPU must be one of: $VALID_VPUS"
+    exit 1
+fi
+
+# If we get here, all arguments are valid
+echo "START_TIME: $START_TIME"
+echo "FORECAST_TYPE: $FORECAST_TYPE"
+echo "VPU: $VPU"
+
+# Fetch and rename NWM forecasted channel routing data
+python fetch_nwm_data.py --start_date "${START_TIME}" --runinput "${FORECAST_TYPE}"
+mkdir ./channel_forcing
+wget -P ./channel_forcing -i filenamelist.txt
+python rename_troute_inputs.py --start_date "${START_TIME}" --directory ./channel_forcing
+
+# Fetch and reformat NWM analysis_assim data into restarts
+python fetch_nwm_data.py --start_date "${START_TIME}" --runinput 5
+mkdir ./restart
+wget -P ./restart -i filenamelist.txt -O analysis_assim.nc
+RESTART_FILE=$(python restart.py \
+    --nwm_file_path ./restart/analysis_assim.nc \
+    --routelink_file_path RouteLink_CONUS.nc \
+    --map_file_path nwm_to_ngen_map.json \
+    --output_directory ./restart)
 
 # Some function to edit troute.yaml and run t-route
 # Do some regex magic to change start_datetime and nts, and mask file
+mkdir ./outputs
 # TODO: figure out regex
 # python3 -m nwm_routing -f -V4 troute.yaml
 
 # Some function to convert NWM t-route outputs into NextGen catchment resolution
-# python nwm_to_ngen.py --nwm_to_ngen_map /path/to/map/json
-# --troute_outputs /path/to/nwm/troute/outputs
+python nwm_to_ngen.py \
+    --nwm_to_ngen_map nwm_to_ngen_map.json \
+    --troute_outputs ./outputs
