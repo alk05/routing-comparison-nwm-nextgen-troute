@@ -37,8 +37,8 @@ New File Name | Original File Name
 ---|---
 202604300000.CHRTOUT_DOMAIN1 | nwm.t00z.short_range.channel_rt.f001.conus.nc 
 202604300100.CHRTOUT_DOMAIN1 | nwm.t00z.short_range.channel_rt.f002.conus.nc
-202606190400.CHRTOUT_DOMAIN1 | nwm.t04z.short_range.channel_rt.f001.conus.nc 
-202606190500.CHRTOUT_DOMAIN1 | nwm.t04z.short_range.channel_rt.f002.conus.nc
+202606190500.CHRTOUT_DOMAIN1 | nwm.t04z.short_range.channel_rt.f001.conus.nc 
+202606190600.CHRTOUT_DOMAIN1 | nwm.t04z.short_range.channel_rt.f002.conus.nc
 
 Technically, the f001 files correspond to an hour after the initial time, (for t0z, the f001 refers to 01:00, not 00:00 like how it is renamed). However, NWM and t-route models have differences in what an hour's output refers to. For one, it refers to the previous hour, while the other is that of the upcoming hour. Following the naming convention above ensures that the models align.
 
