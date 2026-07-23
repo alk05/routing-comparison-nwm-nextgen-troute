@@ -18,17 +18,8 @@
 #
 # Defaults to short range (18-hour forecast) when called with no arguments.
 #
-# Usage (PLACEHOLDER):
-#   bash Scripts/run_qkrig_hourly.sh                         # yesterday, all 24 h
-#   bash Scripts/run_qkrig_hourly.sh --date 2024-09-26       # specific date, all 24 h
-#   bash Scripts/run_qkrig_hourly.sh --date 2024-09-26 --hour 04          # single hour
-#   bash Scripts/run_qkrig_hourly.sh --date 2024-09-26 --start-hour 00 --end-hour 11  # hour range
-#   bash Scripts/run_qkrig_hourly.sh --start-date 2024-09-25 --end-date 2024-09-28    # date range, all 24 h each
-#
-# Docker usage (env-var driven) (PLACEHOLDER):
-#   docker run -e DATE=2024-09-26 -e HOUR=04 ...
-#   docker run -e DATE=2024-09-26 -e START_HOUR=00 -e END_HOUR=11 ...
-#   docker run -e START_DATE=2024-09-25 -e END_DATE=2024-09-28 ...
+# Usage:
+#   bash run_nwm_route.sh --START_TIME 202607231200 --FORECAST_TYPE 1 --VPU 03W
 # =============================================================================
 
 # Argument parser
