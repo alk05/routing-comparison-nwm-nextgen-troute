@@ -16,8 +16,6 @@
 # Finally, run some code that comes from visualizing_outputs.ipynb to recast
 # NWM t-route outputs to NextGen catchment resolution.
 #
-# Defaults to short range (18-hour forecast) when called with no arguments.
-#
 # Usage:
 #   bash run_nwm_route.sh --START_TIME 202607231200 --FORECAST_TYPE 1 --VPU 03W
 #       --N_CPUS 4
@@ -113,6 +111,8 @@ python rename_troute_inputs.py --start_date "${START_TIME}" --directory ./channe
 python fetch_nwm_data.py --start_date "${START_TIME}" --runinput 5
 mkdir ./restart
 wget -P ./restart -i filenamelist.txt -O analysis_assim.nc
+
+# shellcheck disable=SC2034
 RESTART_FILE=$(python restart.py \
     --nwm_file_path ./restart/analysis_assim.nc \
     --routelink_file_path ./domain/RouteLink_CONUS.nc \
@@ -121,11 +121,33 @@ RESTART_FILE=$(python restart.py \
 
 # Edit troute.yaml and run t-route
 mkdir ./output
+
+# shellcheck disable=SC2034
+MASK_FILE_PATH="vpu${VPU,,}_ids.txt"
+
+# shellcheck disable=SC2034
+case $FORECAST_TYPE in
+    1|11)
+        NTS=18
+        ;;
+    2|3)
+        NTS=240
+        ;;
+    4)
+        NTS=720
+        ;;
+    *)
+        echo "Invalid forecast type: $FORECAST_TYPE"
+        exit 1
+        ;;
+esac
+
+# shellcheck disable=SC2034
+MAX_LOOP_SIZE=NTS
+
 envsubst < troute_template.yaml > troute.yaml
 python3 -m nwm_routing -f -V4 troute.yaml
-# TODO: make sure all env vars have values
-# MASK_FILE_PATH is derived from VPU.
-# NTS = MAX_LOOP_SIZE defined by RUNINPUT
+
 
 # Some function to convert NWM t-route outputs into NextGen catchment resolution
 python nwm_to_ngen.py \
