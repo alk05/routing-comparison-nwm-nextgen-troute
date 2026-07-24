@@ -89,7 +89,7 @@ def main():
 
     varinput = 1 # channel routing
     geoinput = 1 # CONUS
-    urlbaseinput = 4 # GCS
+    urlbaseinput = 3 # GCS
     meminput = 0 # ensemble member
     write_to_file = True
 

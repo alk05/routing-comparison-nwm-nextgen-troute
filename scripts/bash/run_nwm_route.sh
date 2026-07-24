@@ -48,6 +48,7 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --N_CPUS)
+            # shellcheck disable=SC2034
             N_CPUS="$2"
             shift 2
             ;;
