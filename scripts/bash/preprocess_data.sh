@@ -164,7 +164,7 @@ case $FORECAST_TYPE in
         ;;
 esac
 
-NTS=$((N_HOURS*18))
+NTS=$((N_HOURS*12))
 export NTS
 export MAX_LOOP_SIZE=$NTS
 
