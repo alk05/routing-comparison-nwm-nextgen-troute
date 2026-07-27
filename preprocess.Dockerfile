@@ -23,7 +23,7 @@ RUN uv pip install --system -e . \
 FROM amazonlinux:2023 AS runtime
 
 RUN dnf -y install \
-        python3.11 wget \
+        python3.11 wget gettext \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
@@ -41,6 +41,9 @@ COPY --from=builder /routing-comparison-nwm-nextgen-troute/scripts    \
     /routing-comparison-nwm-nextgen-troute/scripts
 
 WORKDIR /routing-comparison-nwm-nextgen-troute
+RUN wget \
+    https://ciroh-community-ngen-datastream.s3.amazonaws.com/resources/v2.2_hydrofabric/troute_restart/RouteLink_CONUS.nc
+RUN mv RouteLink_CONUS.nc /routing-comparison-nwm-nextgen-troute/data
 
 ENTRYPOINT bash scripts/bash/preprocess_data.sh --START_TIME ${START_TIME} \
-    --FORECAST_TYPE ${FORECAST_TYPE}
+    --FORECAST_TYPE ${FORECAST_TYPE} --VPU ${VPU} --N_CPUS ${N_CPUS}

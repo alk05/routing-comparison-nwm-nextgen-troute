@@ -156,7 +156,8 @@ def solve_depth_geom(
     - h: Initial depth that achieves the target flow rate, or NaN if no solution is found.
     """
 
-    area = np.where(velocity == 0, 0, streamflow / velocity) # cross-sectional area of initial flow
+    # cross-sectional area of initial flow
+    area = np.divide(streamflow, velocity, where=velocity!=0, out=np.zeros_like(velocity))
     area = np.where(np.isnan(area), 0, area)  # set NaN areas to 0
     area = np.where(np.isinf(area), 0, area)  # set infinite areas to 0
 
