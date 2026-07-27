@@ -48,18 +48,25 @@ def main():
         troute_filepath
     )
 
+    # Map and aggregate
+    df_t_route['feature_id'] = df_t_route['location_id'].str.replace('nex-', '').astype(float)
     # Create reverse mapping
     id_to_cat = {fid: cat for cat, fids in mapping_dict.items() for fid in fids}
+    df_t_route['catchment'] = df_t_route['feature_id'].map(id_to_cat)
 
-    # Map and aggregate
-    df_t_route['feature_id'] = df_t_route['feature_id'].map(id_to_cat)
-    ngen_output = df_t_route.groupby(['feature_id', 'time'], as_index=False).agg({
-        'flow': 'max', # TODO: figure out how to get the most downstream value
-        'velocity': 'mean',
-        'depth': 'max',
-        'nudge': 'mean',
-        'type': 'first'   # assumes type is constant within groups
-    })
+    # Group by category, timestep, and variable, then average
+    ngen_output = df_t_route.groupby(['catchment', 'value_time', 'variable_name']).agg({
+        'value': 'mean',
+        'units': 'first',
+        'reference_time': 'first',
+        'configuration': 'first'
+    }).reset_index()
+
+    # Rename category to location_id
+    ngen_output = ngen_output.rename(columns={'catchment': 'location_id'})
 
     ngen_output_path = troute_filepath.with_stem(f"converted_{troute_filepath.stem}")
     ngen_output.to_parquet(ngen_output_path)
+
+if __name__ == "__main__":
+    main()

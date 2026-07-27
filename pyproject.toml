@@ -12,5 +12,6 @@ dependencies = [
     "nwmurl>=1.0.6",
     "pandas<3.0.5",
     "pathlib>=1.0.1",
+    "pyarrow>=25.0.0",
     "xarray<2026.7.0",
 ]
