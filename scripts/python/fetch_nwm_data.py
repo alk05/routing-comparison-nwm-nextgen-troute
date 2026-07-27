@@ -59,9 +59,9 @@ def main():
     """
     args = _parse_arguments()
 
-    start_date = args.start_date
+    start_date = args.start_date.strftime("%Y%m%d%H%M")
     end_date = start_date # this only fetches one NWM run
-    fcst_cycle = [0]
+    fcst_cycle = [args.start_date.hour]
 
     runinput = args.runinput
 
