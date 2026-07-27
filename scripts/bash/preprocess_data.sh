@@ -150,13 +150,13 @@ export RESTART_FILE
 
 case $FORECAST_TYPE in
     1|11)
-        NTS=18
+        N_HOURS=18
         ;;
     2|3)
-        NTS=240
+        N_HOURS=240
         ;;
     4)
-        NTS=720
+        N_HOURS=720
         ;;
     *)
         echo "Invalid forecast type: $FORECAST_TYPE"
@@ -164,6 +164,7 @@ case $FORECAST_TYPE in
         ;;
 esac
 
+NTS=$((N_HOURS*18))
 export NTS
 export MAX_LOOP_SIZE=$NTS
 
