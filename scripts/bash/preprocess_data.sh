@@ -127,7 +127,8 @@ RESTART_FILE=$(python scripts/python/restart.py \
     --output_directory ./t-route/restart)
 
 # Set up directories
-mkdir ./t-route/output
+mkdir ./t-route/outputs/
+mkdir ./t-route/outputs/troute
 mkdir ./t-route/domain
 mv data/RouteLink_CONUS.nc ./t-route/domain
 

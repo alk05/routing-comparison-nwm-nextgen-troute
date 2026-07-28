@@ -50,16 +50,8 @@ def main():
 
         f_value = int(match.group(1))
 
-        # Calculate hours ahead: f_value - 1
-        # Technically, the f001 files correspond to an hour after the initial time, (for t0z, the
-        # f001 refers to 01:00, not 00:00 like how it is renamed). However, NWM and t-route models
-        # have differences in what an hour's output refers to. For one, it refers to the previous
-        # hour, while the other is that of the upcoming hour. Following this naming convention
-        # ensures that the models align.
-        hours_ahead = f_value - 1
-
         # Add hours to start time
-        new_dt = start_dt + timedelta(hours=hours_ahead)
+        new_dt = start_dt + timedelta(hours=f_value)
 
         # Format new filename
         new_filename = f"{new_dt.strftime('%Y%m%d%H%M')}.CHRTOUT_DOMAIN1"

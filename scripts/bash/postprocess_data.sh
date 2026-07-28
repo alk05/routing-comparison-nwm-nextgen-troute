@@ -10,8 +10,8 @@
 
 # Convert NWM t-route outputs into NextGen catchment resolution
 
-PARQUET_NAME=$(ls ./t-route/output)
-TROUTE_OUTPUT="./t-route/output/${PARQUET_NAME}"
+NC_NAME=$(ls ./t-route/outputs/troute)
+TROUTE_OUTPUT="./t-route/outputs/troute/${NC_NAME}"
 python scripts/python/nwm_to_ngen.py \
     --nwm_to_ngen_map data/nwm_to_ngen_map.json \
     --troute_outputs "$TROUTE_OUTPUT"

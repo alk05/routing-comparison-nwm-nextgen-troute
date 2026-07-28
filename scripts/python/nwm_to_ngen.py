@@ -14,22 +14,21 @@ import json
 import argparse
 from pathlib import Path
 import pandas as pd
+import xarray as xr
+
 
 def _parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--nwm_to_ngen_map",
-        type=Path,
-        help="Path to the nwm_to_ngen_map.json"
+        "--nwm_to_ngen_map", type=Path, help="Path to the nwm_to_ngen_map.json"
     )
     parser.add_argument(
-        "--troute_outputs",
-        type=Path,
-        help="Path to the NWM t-route outputs"
+        "--troute_outputs", type=Path, help="Path to the NWM t-route outputs"
     )
 
     args = parser.parse_args()
     return args
+
 
 def main():
     """Takes the mean of flow, velocity, and depth for all NWM routed outputs that correspond to a
@@ -39,34 +38,49 @@ def main():
 
     # Crosswalk NWM and NextGen IDs
     with open(args.nwm_to_ngen_map, "r", encoding="utf-8") as f:
-        mapping_dict = json.load(f) # {nex-id: [nwm_id_1, nwm_id_2, ...]}
+        mapping_dict = json.load(f)  # {nex-id: [nwm_id_1, nwm_id_2, ...]}
 
-    troute_filepath = args.troute_outputs
-
-    # t_route
-    df_t_route = pd.read_parquet(
-        troute_filepath
-    )
-
-    # Map and aggregate
-    df_t_route['feature_id'] = df_t_route['location_id'].str.replace('nex-', '').astype(float)
     # Create reverse mapping
     id_to_cat = {fid: cat for cat, fids in mapping_dict.items() for fid in fids}
-    df_t_route['catchment'] = df_t_route['feature_id'].map(id_to_cat)
 
-    # Group by category, timestep, and variable, then average
-    ngen_output = df_t_route.groupby(['catchment', 'value_time', 'variable_name']).agg({
-        'value': 'mean',
-        'units': 'first',
-        'reference_time': 'first',
-        'configuration': 'first'
-    }).reset_index()
+    # t_route netcdf to dataframe
+    ds_t_route = xr.open_dataset(args.troute_outputs)
+    df_t_route = ds_t_route.to_dataframe().reset_index()
+
+    # Map and aggregate
+    df_t_route["catchment"] = df_t_route["feature_id"].map(id_to_cat)
+
+    # Group by catchment and time, average the variables
+    ngen_output = (
+        df_t_route.groupby(["catchment", "time"])
+        .agg(
+            {
+                "flow": "mean",
+                "velocity": "mean",
+                "depth": "mean",
+                "nudge": "mean",
+                "type": "first",  # or 'most_common' if you prefer
+            }
+        )
+        .reset_index()
+    )
 
     # Rename category to location_id
-    ngen_output = ngen_output.rename(columns={'catchment': 'location_id'})
+    ngen_output = ngen_output.rename(columns={"catchment": "feature_id"})
 
-    ngen_output_path = troute_filepath.with_stem(f"converted_{troute_filepath.stem}")
-    ngen_output.to_parquet(ngen_output_path)
+    # Reorder columns to match template
+    ngen_output = ngen_output[
+        ["feature_id", "time", "type", "flow", "velocity", "depth", "nudge"]
+    ]
+
+    ngen_output_path = (
+        Path(args.troute_outputs)
+        .with_stem(f"converted_{Path(args.troute_outputs).stem}")
+        .with_suffix(".parquet")
+    )
+    ngen_output.to_parquet(ngen_output_path, index=False)
+    print(f"Saved to {ngen_output_path}")
+
 
 if __name__ == "__main__":
     main()
