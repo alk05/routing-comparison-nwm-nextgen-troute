@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1wbRzIac-vRjibT7hTjN0LuZlyjgqNYAy
 
 Generates restart files compatible with t-route from operational National Water Model (NWM)
-analysis-assimilation channel routing data.
+analysis-assimilation channel routing data. Also generates the companion crosswalk file.
 """
 
 import json
@@ -295,6 +295,32 @@ def write_netcdf_restart(prefix: Path, ds: xr.Dataset, name: str):
     netcdf_cat_file_size = os.path.getsize(nc_filename) / B2MB
     return [netcdf_cat_file_size]
 
+
+def create_crosswalk(restart: xr.Dataset):
+    """
+    Create a crosswalk netCDF file from a restart dataset.
+
+    Args:
+        restart_file: Path to the restart netCDF file
+        output_file: Path to write the crosswalk netCDF file (default: 'crosswalk.nc')
+    """
+
+    # Get the link coordinates and convert to integers
+    link_values = restart.coords['links'].values.astype(int)
+
+    # Create the new dataset
+    n_features = len(link_values)
+    crosswalk = xr.Dataset(
+        data_vars={
+            'link': (['feature_id'], link_values)
+        },
+        coords={
+            'feature_id': np.arange(n_features)
+        }
+    )
+
+    return crosswalk
+
 def main():
     """
     Creates and writes a t-route compatible restart file from an operational NWM
@@ -325,10 +351,18 @@ def main():
     output_filename = "troute_restart.nc"
     output_directory = args.output_directory
 
+    crosswalk = create_crosswalk(restart_ds)
+
     write_netcdf_restart(
         prefix=output_directory,
         ds=restart_ds,
         name=output_filename
+    )
+
+    write_netcdf_restart(
+        prefix=output_directory,
+        ds=crosswalk,
+        name="crosswalk.nc"
     )
 
     # prints so bash can read the filename
