@@ -44,6 +44,7 @@ compute_parameters:
         start_datetime: ${START_DATETIME}
         wrf_hydro_channel_restart_file        : restart/troute_restart.nc
         wrf_hydro_channel_ID_crosswalk_file   : restart/crosswalk.nc
+        wrf_hydro_channel_restart_input_type : reorder
         wrf_hydro_channel_ID_crosswalk_file_field_name : link
         wrf_hydro_channel_restart_upstream_flow_field_name : qlink1
         wrf_hydro_channel_restart_downstream_flow_field_name : qlink2
@@ -58,10 +59,17 @@ compute_parameters:
         max_loop_size               : ${MAX_LOOP_SIZE}   # [hr]
         # max_loop_size == nts so that output is single file
     data_assimilation_parameters:
+        usgs_timeslices_folder : domain/  # The da input reader will fail without a dummy input for these lines.
+        usace_timeslices_folder : domain/  # So, we give "domain/" which has no timeslices in it and the reader is happy.
         streamflow_da:
             #----------
-            streamflow_nudging: False
+            streamflow_da: True
+            da_from_feather : da/troute_da.feather
+            streamflow_nudging: True
             diffusive_streamflow_nudging: False
+            gage_segID_crosswalk_file : domain/RouteLink_CONUS.nc  # Possibly not actually used, but unprotected in the reader call
+            crosswalk_gage_field : 'gage'  # Possibly not actually used, but unprotected in the reader call
+            crosswalk_segID_field : 'link'  # Possibly not actually used, but unprotected in the reader call
         reservoir_da:
             #----------
             reservoir_persistence_da:

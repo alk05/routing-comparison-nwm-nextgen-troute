@@ -169,4 +169,35 @@ NTS=$((N_HOURS*12))
 export NTS
 export MAX_LOOP_SIZE=$NTS
 
+
+ROUTELINK="${ROUTELINK_PATH:-./t-route/domain/RouteLink_CONUS.nc}"
+
+
+FEATHER_OUTPUT_DIR="./t-route/da"
+mkdir -p "${FEATHER_OUTPUT_DIR}"
+FEATHER_OUTPUT_FILE="${FEATHER_OUTPUT_DIR}/troute_da.feather"
+
+
+if [ ! -f "${ROUTELINK}" ]; then
+    echo "Error: RouteLink file not found at : ${ROUTELINK}" >&2
+    exit 1
+fi
+
+export PYTHONPATH="/opt/troute-da/src:$PYTHONPATH"
+#python3 -m troute_usgsdf \
+makedf \
+    --route-link "${ROUTELINK}" \
+    --start "${START_DATETIME}" \
+    --nts "${NTS}" \
+    --output "${FEATHER_OUTPUT_FILE}"
+
+if [ -s "${FEATHER_OUTPUT_FILE}" ]; then
+    echo "Success: Created ${FEATHER_OUTPUT_FILE} ($(du -h "${FEATHER_OUTPUT_FILE}" | cut -f1))"
+else
+    echo "Error: ${FEATHER_OUTPUT_FILE} was not created" >&2
+    exit 1
+fi
+
+
+
 envsubst < data/troute_template.yaml > ./t-route/troute.yaml

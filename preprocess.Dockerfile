@@ -2,6 +2,10 @@ FROM amazonlinux:2023 AS builder
 ENV START_TIME=""
 ENV FORECAST_TYPE=""
 
+RUN dnf install -y git && dnf clean all
+RUN git clone --depth 1 -b temp_routelinkdev https://github.com/alk05/troute-usgsdf.git /opt/troute-da
+
+
 RUN dnf -y install \
         python3.11 tar gzip\
     && dnf clean all \
@@ -20,7 +24,13 @@ RUN uv pip install --system -e . \
     && rm -rf /root/.cache/uv /root/.cache/pip
 
 
+WORKDIR /opt/troute-da
+RUN uv pip install --system -e . \
+    && rm -rf /root/.cache/uv /root/.cache/pip
+
+
 FROM amazonlinux:2023 AS runtime
+
 
 RUN dnf -y install \
         python3.11 wget gettext \
@@ -29,6 +39,8 @@ RUN dnf -y install \
 
 RUN ln -sf /usr/bin/python3.11 /usr/bin/python3 \
     && ln -sf /usr/bin/python3.11 /usr/bin/python
+
+COPY --from=builder /opt/troute-da /opt/troute-da
 
 COPY --from=builder /usr/local/lib/python3.11/site-packages   \
     /usr/local/lib/python3.11/site-packages

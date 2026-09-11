@@ -48,17 +48,17 @@ def main():
     df_t_route = ds_t_route.to_dataframe().reset_index()
 
     # Map and aggregate
-    df_t_route["catchment"] = df_t_route["feature_id"].map(id_to_cat)
+    df_t_route["catchment"] = df_t_route["feature_id"].map(id_to_cat)    
 
     # Group by catchment and time, average the variables
     ngen_output = (
         df_t_route.groupby(["catchment", "time"])
         .agg(
             {
-                "flow": "mean",
-                "velocity": "mean",
-                "depth": "mean",
-                "nudge": "mean",
+                "flow": "max",
+                "velocity": "max",
+                "depth": "max",
+                "nudge": "max",
                 "type": "first",  # or 'most_common' if you prefer
             }
         )
