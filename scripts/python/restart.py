@@ -270,7 +270,7 @@ def create_restart(
         coords={"links": result_df.index.values.astype(str)}, # Cast NWM IDs to string
         attrs={
             "Restart_Time": (
-                pd.Timestamp(nwm_ds["time"].values[0]) + pd.Timedelta(hours=1)).strftime(
+                pd.Timestamp(nwm_ds["time"].values[0])).strftime(
                 "%Y-%m-%d_%H:%M:%S"
             )
         },

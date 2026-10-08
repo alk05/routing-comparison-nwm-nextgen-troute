@@ -48,7 +48,7 @@ def main():
             print(f"Could not extract f-value from {file.name}, skipping")
             continue
 
-        f_value = int(match.group(1))
+        f_value = int(match.group(1)) - 1
 
         # Add hours to start time
         new_dt = start_dt + timedelta(hours=f_value)
