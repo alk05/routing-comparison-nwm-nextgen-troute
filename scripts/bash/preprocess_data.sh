@@ -188,6 +188,7 @@ export PYTHONPATH="/opt/troute-da/src:$PYTHONPATH"
 makedf \
     --route-link "${ROUTELINK}" \
     --start "${START_DATETIME}" \
+    --mask "./t-route/domain/${MASK_FILE_PATH}" \
     --nts "${NTS}" \
     --output "${FEATHER_OUTPUT_FILE}"
 
