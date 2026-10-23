@@ -187,6 +187,7 @@ export PYTHONPATH="/opt/troute-da/src:$PYTHONPATH"
 #python3 -m troute_usgsdf \
 makedf \
     --route-link "${ROUTELINK}" \
+    --mask "./t-route/domain/${MASK_FILE_PATH}" \
     --start "${START_DATETIME}" \
     --mask "./t-route/domain/${MASK_FILE_PATH}" \
     --nts "${NTS}" \
